@@ -12,6 +12,7 @@ import nicoangeletti.bazar.service.IClienteService;
 import nicoangeletti.bazar.service.IVentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.integration.IntegrationProperties.Endpoint;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,27 +63,24 @@ public Venta traerVenta(@PathVariable Long codigo_venta){
     
 }
 
-//@DeleteMapping("/clientes/eliminar/{codigo_venta}")
-//public String eliminarVenta(@PathVariable Long codigo_venta){
-//    ventaServ.eliminarVenta(codigo_venta);
-//    return "Se ha eliminado con exito";
-//}
+@DeleteMapping("/clientes/ventas/eliminar/{codigo_venta}")
+public String eliminarVenta(@PathVariable Long codigo_venta){
+    ventaServ.eliminarVenta(codigo_venta);
+    return "Se ha eliminado con exito";
+}
 
-@PutMapping("/clientes/editar/{codigo_venta}")
+@PutMapping("/clientes/ventas/editar/{codigo_venta}")
 public String editarVenta(@PathVariable Long codigo_venta ,
+                          @RequestParam Long codigoNuevo,
                           @RequestParam LocalDate fecha_venta,
                            @RequestParam Double total,
                            @RequestParam List<Producto> listaProductos,
                            @RequestParam Cliente cliente){
     
-    Venta venta = this.traerVenta(codigo_venta);
     
-    venta.setFecha_venta(fecha_venta);
-    venta.setTotal(total);
-    venta.setListaProductos(listaProductos);
-    venta.setUnCliente(cliente);
+    ventaServ.editarVenta(codigo_venta, codigoNuevo, fecha_venta, total, listaProductos, cliente);
     
-    this.guardarVenta(venta);
+   
     
     return "Se ha editado con exito";
     
@@ -105,26 +103,23 @@ public String editarVenta(@PathVariable Long codigo_venta ,
         
     
 
-
-@GetMapping("/ventas/{fecha_venta}")
-public String obtenerDatosVenta(@PathVariable LocalDate fecha_venta){
+@GetMapping("/ventas/traerDatos/{fecha_venta}")
+public String obtenerDatosVenta(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fecha_venta){
     List<Venta> listaVentas = this.traerVentas(); 
     
     Double montoTotal = 0.0 ; 
     int ventasTotal = 0;
     
     for(Venta venta : listaVentas){
-        if(venta.getFecha_venta() == fecha_venta){
+        if(venta.getFecha_venta().equals(fecha_venta)){
             montoTotal += venta.getTotal();
             ventasTotal ++;
         }
         
     }
     
-    return "Datos de las ventas del" + fecha_venta + " : Monto total =  " + montoTotal + " Ventas Totales= " + ventasTotal; 
+    return "Datos de las ventas del " + fecha_venta + " : Monto total =  " + montoTotal + " Ventas Totales= " + ventasTotal; 
 }
-        
-
 
 
 @GetMapping("/ventas/mayor_venta")
@@ -135,27 +130,21 @@ public ClaseDTO traerDatosMayorVenta(){
     
     for(Venta venta : listaVentas){
         if(venta.getTotal() > montoMayor){
-            montoMayor = venta.getTotal(); // Corrección aquí
+            montoMayor = venta.getTotal(); 
+            
             mayorVenta = new ClaseDTO();
-            
-            Long codigoVenta = venta.getCodigo_venta();
-            int cantidadProductos = venta.getListaProductos().size();
-            String nombreCliente = venta.getUnCliente().getNombre();
-            String apellidoCliente = venta.getUnCliente().getApellido();
-            
-            mayorVenta.setCodigo_venta(codigoVenta);
-            mayorVenta.setCantidad_productos(cantidadProductos);
-            mayorVenta.setNombre_cliente(nombreCliente);
-            mayorVenta.setApellido_cliente(apellidoCliente);
-        }
+            mayorVenta.setCodigo_venta(venta.getCodigo_venta());
+            mayorVenta.setCantidad_productos(venta.getListaProductos().size());
+            mayorVenta.setNombre_cliente(venta.getUnCliente().getNombre());
+            mayorVenta.setApellido_cliente(venta.getUnCliente().getApellido());
+            mayorVenta.setTotal(montoMayor);
+                    
+                          }
     }
     
     return mayorVenta;
 }
 
-
-  
-  
   
   
   

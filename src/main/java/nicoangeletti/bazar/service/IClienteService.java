@@ -17,7 +17,7 @@ public interface IClienteService {
     
     public void eliminarCliente(Long idCliente);
     
-    public void editarCliente(Cliente cliente);
+    public void editarCliente(Long idOriginal , Long idNuevo ,String nombre, String apellido , int dni);
     
     
 }

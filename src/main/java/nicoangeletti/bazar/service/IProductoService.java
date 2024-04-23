@@ -17,11 +17,7 @@ public interface IProductoService {
     
     public void eliminarProducto(Long idProducto);
     
-    public void editarProducto(Producto producto);
+    public void editarProducto(Long codigoOriginal , Long codigoNuevo , String nombre, String Marca , Double costo , Double cantidad_disponible);
      
-    
-    
-    // public List<Producto> obtenerProductosEnFalta();
-  
     
 }

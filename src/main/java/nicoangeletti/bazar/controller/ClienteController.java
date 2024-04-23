@@ -63,20 +63,13 @@ public String eliminarCliente(@PathVariable Long id_cliente){
 
 @PutMapping("/clientes/editar/{id_cliente}")
 public String editarCliente(@PathVariable Long id_cliente,
+                            @RequestParam Long id_nuevo, 
                             @RequestParam String nombre ,
                             @RequestParam String apellido,
                             @RequestParam int dni){
-    Cliente cliente = this.traerCliente(id_cliente);
-
-   
-    cliente.setNombre(nombre);
-    cliente.setApellido(apellido);
-    cliente.setDni(dni);
-   
-    this.guardarCliente(cliente);
-    
-    return "Se ha editado con exito";
-    
+  
+    clienteServ.editarCliente(id_cliente, id_nuevo, nombre, apellido, dni);
+    return "Cliente editado con exito";
 }
 
 

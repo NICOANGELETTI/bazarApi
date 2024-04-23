@@ -41,9 +41,20 @@ public class ProductoService implements IProductoService{
     }
 
     @Override
-    public void editarProducto(Producto producto) {
+    public void editarProducto(Long codigoOriginal, Long codigoNuevo, String nombre, String Marca, Double costo, Double cantidad_disponible) {
+
+        Producto producto = this.traerProducto(codigoOriginal);
+        
+        producto.setCodigo_producto(codigoNuevo);
+        producto.setNombre(nombre);
+        producto.setMarca(Marca);
+        producto.setCosto(costo);
+        producto.setCantidad_disponible(cantidad_disponible);
+        
         this.guardarProducto(producto);
     }
+
+   
     
     
     

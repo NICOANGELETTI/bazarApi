@@ -1,9 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package nicoangeletti.bazar.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import nicoangeletti.bazar.model.Producto;
 import nicoangeletti.bazar.service.IProductoService;
@@ -55,54 +53,41 @@ public class ProductoController {
         
      }
      
-     @PutMapping("/productos/editar/{codigo_producto}")
-     public String editarProducto(Producto producto){
-         productoServ.guardarProducto(producto);
-         return "Se ha editado con exito";
-     }
-      
+  
      
      
      @PutMapping("/productos/editar/{id_producto}")
 public String editarProducto(@PathVariable Long id_producto,
+                            @RequestParam Long idNuevo,
                             @RequestParam String nombre ,
                             @RequestParam String marca,
                             @RequestParam Double costo,
                             @RequestParam Double cantidad_disponible)
                                     {
-    Producto producto = this.traerProducto(id_producto);
-
    
-    producto.setNombre(nombre);
-    producto.setMarca(marca);
-    producto.setCosto(costo);
-    producto.setCantidad_disponible(cantidad_disponible);
-    
+                    
+    productoServ.editarProducto(id_producto, idNuevo, nombre, marca, costo, cantidad_disponible);
         
-   
-    this.traerProducto(id_producto);
-    
+
     return "Se ha editado con exito";
     
 }
 
 
 
-        
-    @GetMapping("/productos/falta_stock")
-    public List<Producto> traerProductosEnFalta(){
-        List<Producto> listaProductos = this.traerProductos();
-        
-        for(Producto producto : listaProductos){
-            if(producto.getCantidad_disponible() < 5){
-                listaProductos.remove(producto);
-            }
+  @GetMapping("/productos/falta_stock")
+public List<Producto> traerProductosEnFalta() {
+    List<Producto> listaProductosEnFalta = new ArrayList<>();
+    List<Producto> listaProductos = this.traerProductos(); // Obtener la lista de productos
+
+    for (Producto producto : listaProductos) {
+        if (producto.getCantidad_disponible() < 4) { // Condición para determinar si un producto está en falta de stock
+            listaProductosEnFalta.add(producto); // Agregar el producto a la lista de productos en falta
         }
-        return listaProductos;
     }
-    
-    
-    
+
+    return listaProductosEnFalta; // Devolver la lista de productos en falta de stock
+}
  
      
      

@@ -41,10 +41,20 @@ public class ClienteService implements IClienteService{
     }
 
     @Override
-    public void editarCliente(Cliente cliente) {
+    public void editarCliente(Long idOriginal, Long idNuevo, String nombre, String apellido, int dni) {
+        Cliente cliente = this.traerCliente(idOriginal);
+        
+        cliente.setId_cliente(idNuevo);
+        cliente.setNombre(nombre);
+        cliente.setApellido(apellido);
+        cliente.setDni(dni);
+        
         this.guardarCliente(cliente);
+        
+        
     }
-    
+
+
     
     
 }
