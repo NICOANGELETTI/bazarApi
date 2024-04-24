@@ -1,4 +1,4 @@
-# Proyecto de Bazar API
+# Proyecto de Bazar API 📝
 
 ## Descripción
 
